@@ -11,7 +11,7 @@
 
 * 1.3 NSObject的底层实现
 
-![原理图](https://github.com/luckyvon/IOSDeveloper/tree/master/Information/ios底层原理/imgs/1/1.3_1.png)
+![原理图](./imgs/1/1.3_1.png)
 
 
 
