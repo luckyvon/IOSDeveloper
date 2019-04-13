@@ -12,6 +12,57 @@
 * 1.3 NSObject的底层实现
 
 ![原理图](./imgs/1/1.3_1.png)
+![原理图](./imgs/1/1.3_2.png)
+![原理图](./imgs/1/1.3_3.png)
+![原理图](./imgs/1/1.3_4.png)
+
+* 1.4 实时查看内存数据
+
+#### workflow
+![原理图](./imgs/1/1.4_1.png)
+#### LLDB指令
+
+>print、p：打印
+>po：打印对象
+>
+>读取内存
+>memory read/数量格式字节数  内存地址
+>x/数量格式字节数  内存地址
+>x/3xw  0x10010
+>
+>格式
+>x是16进制
+>f是浮点
+>d是10进制
+>
+>字节大小
+>b：byte 1字节
+>h：half word 2字节
+>w：word 4字节
+>g：giant word 8字节
+>
+>修改内存中的值
+>memory  write  内存地址  数值
+>memory  write  0x0000010  10
+
+
+
+### 面试题
+
+* 1.1一个NSObject对象占用多少内存？
+
+```
+ NSObject *obj = [[NSObject alloc] init];
+// 16个字节
+    
+// 获得NSObject实例对象的成员变量所占用的大小 =8
+NSLog(@"%zd", class_getInstanceSize([NSObject class]));//8
+    
+// 系统分配了16个字节给NSObject对象
+//CF requires all objects be at least 16 bytes
+NSLog(@"%zd", malloc_size((__bridge const void *)obj));//16
+    
+```
 
 
 
