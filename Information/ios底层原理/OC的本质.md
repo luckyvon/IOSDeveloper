@@ -11,16 +11,7 @@
 
 * 1.3 NSObject的底层实现
 
-```
-typedef struct objc_class *Class;
-@interface NSObject {
-	Class isa;
-}
-转成结构体
-struct NSObject_IMPL {
-	Class isa;
-}
-```
+![原理图](https://github.com/luckyvon/IOSDeveloper/tree/master/Information/ios底层原理/imgs/1/1.3_1.png)
 
 
 
