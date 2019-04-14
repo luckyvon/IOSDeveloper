@@ -5,8 +5,7 @@
 
 #### 1.2 将Objective-C代码转换为C\C++代码
 
->xcrun  -sdk  iphoneos  clang  -arch  arm64  -rewrite-objc  OC源文件  -o  输出的CPP文件。
->
+>xcrun  -sdk  iphoneos  clang  -arch  arm64  -rewrite-objc  OC源文件  -o  输出的CPP文件。	
 >如果需要链接其他框架，使用-framework参数。比如-framework UIKit
 
 #### 1.3 NSObject的底层实现
@@ -100,3 +99,108 @@ gnu（glibc/malloc/MALLOC_ALIGNMENT=16 c语言源码）是一个开源组织也�
 ![原理图](./imgs/2/2.1_2.png)
 #### meta-class
 ![原理图](./imgs/2/2.1_3.png)
+
+#### 注意
+![原理图](./imgs/2/2.1_4.png)
+#### 查看Class是否为meta-class
+![原理图](./imgs/2/2.1_5.png)
+
+#### 2.2 object_getClass内部实现
+https://opensource.apple.com/tarballs/	
+objc4/objc-runtime.mm
+
+```
+/*
+ 1.Class objc_getClass(const char *aClassName)
+ 1> 传入字符串类名
+ 2> 返回对应的类对象
+ 
+ 2.Class object_getClass(id obj)
+ 1> 传入的obj可能是instance对象、class对象、meta-class对象
+ 2> 返回值
+ a) 如果是instance对象，返回class对象
+ b) 如果是class对象，返回meta-class对象
+ c) 如果是meta-class对象，返回NSObject（基类）的meta-class对象
+ 
+ 3.- (Class)class、+ (Class)class
+ 1> 返回的就是类对象
+ 
+ - (Class) {
+     return self->isa;
+ }
+ 
+ + (Class) {
+     return self;
+ }
+ */
+```
+#### 2.3 isa指针
+![原理图](./imgs/2/2.3_1.png)
+
+#### 2.4 class对象的superclass指针
+![原理图](./imgs/2/2.4_1.png)
+#### 2.5 meta-class对象的superclass指
+![原理图](./imgs/2/2.5_1.png)
+#### 2.6 isa、superclass总结
+![原理图](./imgs/2/2.6_1.png)
+#### 2.7 class结构体
+##### isa指针
+![原理图](./imgs/2/2.7_1.png)
+
+```
+struct mj_objc_class {
+    Class isa;
+    Class superclass;
+};
+
+        // MJPerson类对象的地址：0x00000001000014c8
+        // isa & ISA_MASK：0x00000001000014c8
+        
+        // MJPerson实例对象的isa：0x001d8001000014c9
+        
+        struct mj_objc_class *personClass = (__bridge struct mj_objc_class *)([MJPerson class]);
+        
+        struct mj_objc_class *studentClass = (__bridge struct mj_objc_class *)([MJStudent class]);
+        
+        NSLog(@"1111");
+        
+//        MJPerson *person = [[MJPerson alloc] init];
+//
+        
+//        Class personClass = [MJPerson class];
+        
+//        struct mj_objc_class *personClass2 = (__bridge struct mj_objc_class *)(personClass);
+//
+//        Class personMetaClass = object_getClass(personClass);
+//
+//        NSLog(@"%p %p %p", person, personClass, personMetaClass);
+//        MJStudent *student = [[MJStudent alloc] init];
+
+```
+```
+64bit之前isa = 对象地址，从64bit开始，isa需要进行一次位运算，才能计算出真实地址	
+p/x (long)person->isa
+输出
+0x001d8001000014c9
+
+p/x persionClass 
+输出
+0x00000001000014c8
+
+p/x 0x001d8001000014c9 & 0x00007ffffffffff8（x86下ISA_MASK）
+输出
+0x00000001000014c8
+
+```
+##### objc4源码下载
+* https://opensource.apple.com/tarballs/objc4/
+![原理图](./imgs/2/2.7_2.png)
+* class、meta-class对象的本质结构都是struct objc_class
+
+##### 窥探struct objc_class的结构
+![原理图](./imgs/2/2.7_3.png)
+
+### 面试题 
+
+
+
