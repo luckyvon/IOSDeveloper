@@ -1,3 +1,35 @@
+<!-- TOC -->
+
+- [1、OC对象的本质](#1oc%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8)
+  - [1.1 我们平时编写的Objective-C代码，底层实现其实都是C\C++代码。Objective-C的对象、类主要是基于C\C++的结构体实现](#11-%E6%88%91%E4%BB%AC%E5%B9%B3%E6%97%B6%E7%BC%96%E5%86%99%E7%9A%84objective-c%E4%BB%A3%E7%A0%81%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%85%B6%E5%AE%9E%E9%83%BD%E6%98%AFcc%E4%BB%A3%E7%A0%81objective-c%E7%9A%84%E5%AF%B9%E8%B1%A1%E7%B1%BB%E4%B8%BB%E8%A6%81%E6%98%AF%E5%9F%BA%E4%BA%8Ecc%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%E5%AE%9E%E7%8E%B0)
+  - [1.2 将Objective-C代码转换为C\C++代码](#12-%E5%B0%86objective-c%E4%BB%A3%E7%A0%81%E8%BD%AC%E6%8D%A2%E4%B8%BAcc%E4%BB%A3%E7%A0%81)
+  - [1.3 NSObject的底层实现](#13-nsobject%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0)
+  - [1.4 实时查看内存数据](#14-%E5%AE%9E%E6%97%B6%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE)
+  - [workflow](#workflow)
+  - [LLDB指令](#lldb%E6%8C%87%E4%BB%A4)
+  - [1.5 结构体内存分配](#15-%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D)
+  - [1.6 sizeof注意点](#16-sizeof%E6%B3%A8%E6%84%8F%E7%82%B9)
+- [面试题](#%E9%9D%A2%E8%AF%95%E9%A2%98)
+- [2、OC对象的分类](#2oc%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%86%E7%B1%BB)
+  - [2.1 Objective-C中的对象，简称OC对象，主要可以分为3种](#21-objective-c%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1%E7%AE%80%E7%A7%B0oc%E5%AF%B9%E8%B1%A1%E4%B8%BB%E8%A6%81%E5%8F%AF%E4%BB%A5%E5%88%86%E4%B8%BA3%E7%A7%8D)
+  - [instance](#instance)
+  - [class](#class)
+  - [meta-class](#meta-class)
+  - [注意](#%E6%B3%A8%E6%84%8F)
+  - [查看Class是否为meta-class](#%E6%9F%A5%E7%9C%8Bclass%E6%98%AF%E5%90%A6%E4%B8%BAmeta-class)
+  - [2.2 object_getClass内部实现](#22-objectgetclass%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0)
+  - [2.3 isa指针](#23-isa%E6%8C%87%E9%92%88)
+  - [2.4 class对象的superclass指针](#24-class%E5%AF%B9%E8%B1%A1%E7%9A%84superclass%E6%8C%87%E9%92%88)
+  - [2.5 meta-class对象的superclass指](#25-meta-class%E5%AF%B9%E8%B1%A1%E7%9A%84superclass%E6%8C%87)
+  - [2.6 isa、superclass总结](#26-isasuperclass%E6%80%BB%E7%BB%93)
+  - [2.7 class结构体](#27-class%E7%BB%93%E6%9E%84%E4%BD%93)
+    - [isa指针](#isa%E6%8C%87%E9%92%88)
+    - [objc4源码下载](#objc4%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD)
+    - [窥探struct objc_class的结构](#%E7%AA%A5%E6%8E%A2struct-objcclass%E7%9A%84%E7%BB%93%E6%9E%84)
+- [面试题](#%E9%9D%A2%E8%AF%95%E9%A2%98-1)
+
+<!-- /TOC -->
+
 ### 1、OC对象的本质
 #### 1.1 我们平时编写的Objective-C代码，底层实现其实都是C\C++代码。Objective-C的对象、类主要是基于C\C++的结构体实现
 
