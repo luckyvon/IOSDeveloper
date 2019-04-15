@@ -27,6 +27,11 @@
     - [2.7.2 objc4源码下载](#272-objc4%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD)
     - [2.7.3 窥探struct objc_class的结构](#273-%E7%AA%A5%E6%8E%A2struct-objcclass%E7%9A%84%E7%BB%93%E6%9E%84)
   - [面试题](#%E9%9D%A2%E8%AF%95%E9%A2%98-1)
+- [3、KVO](#3kvo)
+  - [3.1 未使用KVO监听的对象](#31-%E6%9C%AA%E4%BD%BF%E7%94%A8kvo%E7%9B%91%E5%90%AC%E7%9A%84%E5%AF%B9%E8%B1%A1)
+  - [3.2 使用了KVO监听的对象](#32-%E4%BD%BF%E7%94%A8%E4%BA%86kvo%E7%9B%91%E5%90%AC%E7%9A%84%E5%AF%B9%E8%B1%A1)
+  - [3.3 查看_NSSet*AndNotify的存在](#33-%E6%9F%A5%E7%9C%8Bnssetandnotify%E7%9A%84%E5%AD%98%E5%9C%A8)
+  - [3.4 _NSSet*ValueAndNotify的内部实现](#34-nssetvalueandnotify%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0)
 
 <!-- /TOC -->
 
@@ -45,16 +50,16 @@
 
 ## 1.3 NSObject的底层实现
 
-![原理图](./imgs/1/1.3_1.png)
-![原理图](./imgs/1/1.3_2.png)
-![原理图](./imgs/1/1.3_3.png)
-![原理图](./imgs/1/1.3_4.png)
+![screenshot](./imgs/1/1.3_1.png)
+![screenshot](./imgs/1/1.3_2.png)
+![screenshot](./imgs/1/1.3_3.png)
+![screenshot](./imgs/1/1.3_4.png)
 
 ## 1.4 实时查看内存数据
 
 ### 1.4.1 ViewMemory
 
-![原理图](./imgs/1/1.4_1.png)
+![screenshot](./imgs/1/1.4_1.png)
 
 ### 1.4.2 LLDB指令
 
@@ -131,17 +136,17 @@ gnu（glibc/malloc/MALLOC_ALIGNMENT=16 c语言源码）是一个开源组织也�
 * meta-class对象（元类对象） 
 
 ### 2.1.1 instance
-![原理图](./imgs/2/2.1_1.png)
+![screenshot](./imgs/2/2.1_1.png)
 ### 2.1.2 class
-![原理图](./imgs/2/2.1_2.png)
+![screenshot](./imgs/2/2.1_2.png)
 ### 2.1.3 meta-class
-![原理图](./imgs/2/2.1_3.png)
+![screenshot](./imgs/2/2.1_3.png)
 
 ### 2.1.4 注意
-![原理图](./imgs/2/2.1_4.png)
+![screenshot](./imgs/2/2.1_4.png)
 
 ### 2.1.5 查看Class是否为meta-class
-![原理图](./imgs/2/2.1_5.png)
+![screenshot](./imgs/2/2.1_5.png)
 
 ## 2.2 object_getClass内部实现
 https://opensource.apple.com/tarballs/	
@@ -173,17 +178,17 @@ objc4/objc-runtime.mm
  */
 ```
 ## 2.3 isa指针
-![原理图](./imgs/2/2.3_1.png)
+![screenshot](./imgs/2/2.3_1.png)
 
 ## 2.4 class对象的superclass指针
-![原理图](./imgs/2/2.4_1.png)
+![screenshot](./imgs/2/2.4_1.png)
 ## 2.5 meta-class对象的superclass指
-![原理图](./imgs/2/2.5_1.png)
+![screenshot](./imgs/2/2.5_1.png)
 ## 2.6 isa、superclass总结
-![原理图](./imgs/2/2.6_1.png)
+![screenshot](./imgs/2/2.6_1.png)
 ## 2.7 class结构体
 ### 2.7.1 isa指针
-![原理图](./imgs/2/2.7_1.png)
+![screenshot](./imgs/2/2.7_1.png)
 
 ```
 struct mj_objc_class {
@@ -232,15 +237,58 @@ p/x 0x001d8001000014c9 & 0x00007ffffffffff8（x86下ISA_MASK）
 ```
 ### 2.7.2 objc4源码下载
 * https://opensource.apple.com/tarballs/objc4/
-![原理图](./imgs/2/2.7_2.png)
+![screenshot](./imgs/2/2.7_2.png)
 * class、meta-class对象的本质结构都是struct objc_class
 
 ### 2.7.3 窥探struct objc_class的结构
-![原理图](./imgs/2/2.7_3.png)
+![screenshot](./imgs/2/2.7_3.png)
 
 [objc_class的结构项目](./project/objc_class的结构)
 
 ## 面试题 
 
+* 对象的isa指针指向哪里？
 
+```
+instance对象的isa指向class对象
+class对象的isa指向meta-class对象
+meta-class对象的isa指向基类的meta-class对象
+```
 
+* OC的类信息存放在哪里？
+  
+```
+对象方法、属性、成员变量、协议信息，存放在class对象中
+类方法，存放在meta-class对象中
+成员变量的具体值，存放在instance对象
+
+```
+
+# 3、KVO
+
+>KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变
+
+![screenshot](./imgs/3/3.0_1.png)
+
+## 3.1 未使用KVO监听的对象
+
+![screenshot](./imgs/3/3.1_1.png)
+
+## 3.2 使用了KVO监听的对象
+
+![screenshot](./imgs/3/3.2_1.png)
+
+## 3.3 查看_NSSet*AndNotify的存在
+
+![screenshot](./imgs/3/3.3_1.png)
+
+## 3.4 _NSSet*ValueAndNotify的内部实现
+
+![screenshot](./imgs/3/3.4_1.png)
+
+```
+调用willChangeValueForKey:
+调用原来的setter实现
+调用didChangeValueForKey:
+didChangeValueForKey:内部会调用observer的observeValueForKeyPath:ofObject:change:context:方法
+```
