@@ -3,4 +3,3 @@
 
 ### IDE
 [VSCode](https://code.visualstudio.com)
-[VSCode中Markdown目录显示异常](https://jingyan.baidu.com/article/6b97984df62b501ca3b0bf7a.html)
