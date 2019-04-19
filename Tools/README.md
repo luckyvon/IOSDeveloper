@@ -7,3 +7,6 @@
 ### 代码托管
 [Gitee](https://gitee.com)
 
+### Cocoaspod
+[Podspec详解](https://guides.cocoapods.org/syntax/podspec.html#specification)
+
