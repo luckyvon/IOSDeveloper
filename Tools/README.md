@@ -3,6 +3,7 @@
 
 ### IDE
 [VSCode](https://code.visualstudio.com)
+[VSCode运行C/C++](https://www.jianshu.com/p/adc400a0eefd)
 
 ### 代码托管
 [Gitee](https://gitee.com)
